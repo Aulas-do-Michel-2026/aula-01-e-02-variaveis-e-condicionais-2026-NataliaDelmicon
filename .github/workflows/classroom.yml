@@ -1,0 +1,111 @@
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Teste 1
+      id: teste-1
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: Teste 1
+        setup-command: ''
+        command: printf "1.5\n3.5\n5\n" | python exercicio_1.py
+        input: ''
+        expected-output: '3.3'
+        comparison-method: contains
+        timeout: 1
+        max-score: 1
+    - name: Teste 2
+      id: teste-2
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: Teste 2
+        setup-command: ''
+        command: printf "90\n" | python exercicio_2.py
+        input: ''
+        expected-output: '180'
+        comparison-method: contains
+        timeout: 1
+        max-score: 1
+    - name: Teste 3
+      id: teste-3
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: Teste 3
+        setup-command: ''
+        command: printf "7\n" | python exercicio_3.py
+        input: ''
+        expected-output: mpar
+        comparison-method: contains
+        timeout: 1
+        max-score: 1
+    - name: Teste 4
+      id: teste-4
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: Teste 4
+        setup-command: ''
+        command: printf "chr17\n41196313\n" | python exercicio_4.py
+        input: ''
+        expected-output: "\\b[Ss]im\\b"
+        comparison-method: regex
+        timeout: 1
+        max-score: 1
+    - name: Teste 5
+      id: teste-5
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: Teste 5
+        setup-command: ''
+        command: printf "chr17\n41196313\nhg19\n" | python exercicio_5.py
+        input: ''
+        expected-output: "\\b[Ss]im\\b"
+        comparison-method: regex
+        timeout: 1
+        max-score: 1
+    - name: Teste 6
+      id: teste-6
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: Teste 6
+        setup-command: ''
+        command: printf "Estados Unidos\n100\n" | python exercicio_6.py
+        input: ''
+        expected-output: "\\b20(?:\\.\\d+)?\\s*USD\\b"
+        comparison-method: regex
+        timeout: 1
+        max-score: 1
+    - name: Teste 7
+      id: teste-7
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: Teste 7
+        setup-command: ''
+        command: printf "6\nGJB2\nALTO\n100\n20\n" | python exercicio_7.py
+        input: ''
+        expected-output: "^.*[Éé]\\s[Rr]elevante.*$"
+        comparison-method: regex
+        timeout: 10
+        max-score: 1
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        TESTE-1_RESULTS: "${{steps.teste-1.outputs.result}}"
+        TESTE-2_RESULTS: "${{steps.teste-2.outputs.result}}"
+        TESTE-3_RESULTS: "${{steps.teste-3.outputs.result}}"
+        TESTE-4_RESULTS: "${{steps.teste-4.outputs.result}}"
+        TESTE-5_RESULTS: "${{steps.teste-5.outputs.result}}"
+        TESTE-6_RESULTS: "${{steps.teste-6.outputs.result}}"
+        TESTE-7_RESULTS: "${{steps.teste-7.outputs.result}}"
+      with:
+        runners: teste-1,teste-2,teste-3,teste-4,teste-5,teste-6,teste-7
